@@ -8,7 +8,20 @@
 import UIKit
 
 class PomidorViewController: UIViewController {
-    
+
+    private lazy var timerLabel: UILabel = {
+        var label = UILabel()
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "timer"
+        label.font = .systemFont(ofSize: Metric.timerLabelTextFont, weight: .thin)
+        label.textColor = .red
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
+
+        return label
+    }()
+
 
     // MARK: - Views
 
@@ -47,6 +60,8 @@ class PomidorViewController: UIViewController {
 
         parentView.addSubview(timerStackView)
 
+        timerStackView.addArrangedSubview(timerLabel)
+
     }
 
     private func setupLayout() {
@@ -65,7 +80,7 @@ class PomidorViewController: UIViewController {
 
     private func setupView() {
         parentView.backgroundColor = .black
-
+        timerStackView.backgroundColor = .orange
     }
 }
 
