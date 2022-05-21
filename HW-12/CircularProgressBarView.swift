@@ -17,6 +17,9 @@ class CircularProgressBarView: UIView {
     private let endPoint = CGFloat(3 * Double.pi / 2)
     private let circularProgressAnimation = CABasicAnimation(keyPath: "strokeEnd")
 
+    //uses for pause and resume animation of circle
+    private var isAnimationPaused = true
+
     private lazy var circularPath: UIBezierPath = {
         let circularPath = UIBezierPath(arcCenter: CGPoint(x: frame.size.width / 2.0, y: frame.size.height / 2.0), radius: 120, startAngle: startPoint, endAngle: endPoint, clockwise: true)
         return circularPath
@@ -57,6 +60,8 @@ class CircularProgressBarView: UIView {
         circularProgressAnimation.fillMode = .backwards
         circularProgressAnimation.isRemovedOnCompletion = false
         progressLayer.add(circularProgressAnimation, forKey: "progressAnim")
+
+        isAnimationPaused = false
         }
 
 
@@ -65,5 +70,31 @@ class CircularProgressBarView: UIView {
         circleLayer.strokeColor = color
     }
 
+    private func pauseAnimation() {
+        let pausedTime = progressLayer.convertTime(CACurrentMediaTime(), from: nil)
+        progressLayer.speed = 0.0
+        progressLayer.timeOffset = pausedTime
+    }
+
+    private func resumeAnimation() {
+        let pausedTime = progressLayer.timeOffset
+        progressLayer.speed = 1.0
+        progressLayer.timeOffset = 0.0
+        progressLayer.beginTime = 0.0
+
+        let timeSincePause = progressLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
+        progressLayer.beginTime = timeSincePause
+    }
+
+    func toggleAnimationState() {
+
+        if isAnimationPaused {
+            resumeAnimation()
+        } else {
+            pauseAnimation()
+        }
+
+        isAnimationPaused.toggle()
+    }
 }
 
