@@ -127,7 +127,19 @@ class PomidorViewController: UIViewController {
 
     @objc func startPauseButtonAction(sender: UIButton) {
         changeButtonImage()
-        
+
+        if isStarted {
+            timer.invalidate()
+        } else {
+            timer.invalidate()
+
+            timer = Timer.scheduledTimer(timeInterval: 1,
+                                         target: self,
+                                         selector: #selector(PomidorViewController.startTimer),
+                                         userInfo: nil,
+                                         repeats: true)
+        }
+
         isStarted.toggle()
 
     }
