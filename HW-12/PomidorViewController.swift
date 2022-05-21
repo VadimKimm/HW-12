@@ -9,6 +9,8 @@ import UIKit
 
 class PomidorViewController: UIViewController {
 
+    private var isStarted = false
+
     private lazy var timerLabel: UILabel = {
         var label = UILabel()
 
@@ -66,6 +68,7 @@ class PomidorViewController: UIViewController {
         setupLayout()
         setupView()
 
+        startPauseButton.addTarget(self, action: #selector(startPauseButtonAction), for: .touchUpInside)
     }
 
     // MARK: - Settings
@@ -95,15 +98,39 @@ class PomidorViewController: UIViewController {
     }
 
     private func setupView() {
-        parentView.backgroundColor = .gray
+        parentView.backgroundColor = .black
         timerStackView.backgroundColor = .blue
+    }
+
+    // MARK: - @objc functions
+
+    @objc func startPauseButtonAction(sender: UIButton) {
+        changeButtonImage()
+        
+        isStarted.toggle()
+
+    }
+
+    // MARK: - Private functions
+
+    private func getButtonImageConfig() -> UIImage.SymbolConfiguration {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .thin, scale: .default)
+
+        return imageConfig
+    }
+
+    //changing button image to play/pause
+    private func changeButtonImage() {
+        let imageConfig = getButtonImageConfig()
+
+        if isStarted {
+            let image = UIImage(systemName: "play", withConfiguration: imageConfig)
+            startPauseButton.setImage(image, for: .normal)
+        } else {
+            let image = UIImage(systemName: "pause", withConfiguration: imageConfig)
+            startPauseButton.setImage(image, for: .normal)
+        }
     }
 }
 
-// MARK: - Private functions
 
-private func getButtonImageConfig() -> UIImage.SymbolConfiguration {
-    let imageConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .thin, scale: .default)
-
-    return imageConfig
-}
