@@ -9,13 +9,42 @@ import UIKit
 
 class PomidorViewController: UIViewController {
 
+    //defining the timer mode
+    private var isWorkTime = true
+
     private var isStarted = false
+
+    private var timer = Timer()
+
+    private let workTime = 1
+    private let restTime = 2
+
+    //uses for timer countdown
+    private lazy var workTimeInSeconds: Double = {
+        Double(workTime.toSeconds())
+    }()
+
+    //uses for timer countdown
+    private lazy var restTimeInSeconds: Double = {
+        Double(restTime.toSeconds())
+    }()
+
+    //uses for timer countdown
+    private var counter = 0.0
+
+    private lazy var timerLabelTextForWork: String = {
+        String("\(workTime < 10 ? "0\(workTime):00" : "\(workTime):00")")
+    }()
+
+    private lazy var timerLabelTextForRest: String = {
+        String("\(restTime < 10 ? "0\(restTime):00" : "\(restTime):00")")
+    }()
 
     private lazy var timerLabel: UILabel = {
         var label = UILabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "timer"
+        label.text = timerLabelTextForWork
         label.font = .systemFont(ofSize: Metric.timerLabelTextFont, weight: .thin)
         label.textColor = .red
         label.adjustsFontSizeToFitWidth = true
@@ -98,17 +127,37 @@ class PomidorViewController: UIViewController {
     }
 
     private func setupView() {
-        parentView.backgroundColor = .black
-        timerStackView.backgroundColor = .blue
+        
     }
 
     // MARK: - @objc functions
 
     @objc func startPauseButtonAction(sender: UIButton) {
         changeButtonImage()
-        
+
+        if isStarted {
+            timer.invalidate()
+        } else {
+            timer.invalidate()
+
+            timer = Timer.scheduledTimer(timeInterval: 1,
+                                         target: self,
+                                         selector: #selector(PomidorViewController.startTimer),
+                                         userInfo: nil,
+                                         repeats: true)
+        }
+
         isStarted.toggle()
 
+    }
+
+    @objc func startTimer() {
+
+        if isWorkTime {
+            makeCountDown(of: workTimeInSeconds)
+        } else {
+            makeCountDown(of: restTimeInSeconds)
+        }
     }
 
     // MARK: - Private functions
@@ -130,6 +179,48 @@ class PomidorViewController: UIViewController {
             let image = UIImage(systemName: "pause", withConfiguration: imageConfig)
             startPauseButton.setImage(image, for: .normal)
         }
+    }
+
+    //uses for timer's countdown
+    private func makeCountDown(of time: Double) {
+
+        counter += 1
+
+        let minutes = Int(time - counter) / 60
+        let seconds = Int(time - counter) % 60
+
+        timerLabel.text = String("\(minutes < 10 ? "0\(minutes)" : "\(minutes)"):\(seconds < 10 ? "0\(seconds)" : "\(seconds)")")
+
+        if counter >= time  {
+            timer.invalidate()
+            changeButtonImage()
+            changeTimerMode()
+        }
+    }
+
+    //trigerres when the timer ends
+    private func changeTimerMode() {
+        var color = UIColor()
+
+        isStarted.toggle()
+        isWorkTime.toggle()
+
+        //setting up counter for the next uses
+        counter = 0
+
+        if isWorkTime {
+            color = UIColor.red
+            timerLabel.text = timerLabelTextForWork
+        } else {
+            color = UIColor.green
+            timerLabel.text = timerLabelTextForRest
+
+        }
+
+        //changing objects color
+        startPauseButton.configuration?.baseForegroundColor = color
+        timerLabel.textColor = color
+
     }
 }
 
