@@ -14,23 +14,29 @@ class PomidorViewController: UIViewController {
 
     private var isStarted = false
 
+    //uses for pause and resume animation of circle
+    private var isAnimationStarted = false
+
     private var timer = Timer()
 
-    private let workTime = 1
-    private let restTime = 2
+    private let workTime = 25
+    private let restTime = 5
 
-    //uses for timer countdown
     private lazy var workTimeInSeconds: Double = {
         Double(workTime.toSeconds())
     }()
 
-    //uses for timer countdown
     private lazy var restTimeInSeconds: Double = {
         Double(restTime.toSeconds())
     }()
 
-    //uses for timer countdown
     private var counter = 0.0
+
+    private lazy var circularProgressBar: CircularProgressBarView = {
+        let circularProgressBar = CircularProgressBarView(frame: .zero)
+
+        return circularProgressBar
+    }()
 
     private lazy var timerLabelTextForWork: String = {
         String("\(workTime < 10 ? "0\(workTime):00" : "\(workTime):00")")
@@ -100,11 +106,19 @@ class PomidorViewController: UIViewController {
         startPauseButton.addTarget(self, action: #selector(startPauseButtonAction), for: .touchUpInside)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        circularProgressBar.center = CGPoint(x: parentView.frame.size.width / 2, y: parentView.frame.size.height / 2)
+
+    }
+
     // MARK: - Settings
 
     private func setupHierarchy() {
         view.addSubview(parentView)
 
+        parentView.addSubview(circularProgressBar)
         parentView.addSubview(timerStackView)
 
         timerStackView.addArrangedSubview(timerLabel)
@@ -127,7 +141,7 @@ class PomidorViewController: UIViewController {
     }
 
     private func setupView() {
-        
+
     }
 
     // MARK: - @objc functions
@@ -140,11 +154,21 @@ class PomidorViewController: UIViewController {
         } else {
             timer.invalidate()
 
-            timer = Timer.scheduledTimer(timeInterval: 1,
+            /*timeInterval was setted to 0.01 for more accuracy and due to the fact that when timeInterval = 1 and
+             startPauseButton is pressed many times per second, the circle animation and timer can't be synchronized
+            */
+            timer = Timer.scheduledTimer(timeInterval: 0.01,
                                          target: self,
                                          selector: #selector(PomidorViewController.startTimer),
                                          userInfo: nil,
                                          repeats: true)
+        }
+
+        if isAnimationStarted {
+            circularProgressBar.toggleAnimationState()
+        } else {
+            circularProgressBar.startAnimation(duration: isWorkTime ? workTimeInSeconds : restTimeInSeconds)
+            isAnimationStarted.toggle()
         }
 
         isStarted.toggle()
@@ -184,7 +208,7 @@ class PomidorViewController: UIViewController {
     //uses for timer's countdown
     private func makeCountDown(of time: Double) {
 
-        counter += 1
+        counter += 0.01
 
         let minutes = Int(time - counter) / 60
         let seconds = Int(time - counter) % 60
@@ -201,18 +225,22 @@ class PomidorViewController: UIViewController {
     //trigerres when the timer ends
     private func changeTimerMode() {
         var color = UIColor()
+        var cgColor = UIColor.red.cgColor
 
         isStarted.toggle()
         isWorkTime.toggle()
+        isAnimationStarted.toggle()
 
         //setting up counter for the next uses
         counter = 0
 
         if isWorkTime {
             color = UIColor.red
+            cgColor = UIColor.red.cgColor
             timerLabel.text = timerLabelTextForWork
         } else {
             color = UIColor.green
+            cgColor = UIColor.green.cgColor
             timerLabel.text = timerLabelTextForRest
 
         }
@@ -220,7 +248,7 @@ class PomidorViewController: UIViewController {
         //changing objects color
         startPauseButton.configuration?.baseForegroundColor = color
         timerLabel.textColor = color
-
+        circularProgressBar.changeCircularPathColor(to: cgColor)
     }
 }
 
