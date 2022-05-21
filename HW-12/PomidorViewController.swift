@@ -217,6 +217,7 @@ class PomidorViewController: UIViewController {
     //trigerres when the timer ends
     private func changeTimerMode() {
         var color = UIColor()
+        var cgColor = UIColor.red.cgColor
 
         isStarted.toggle()
         isWorkTime.toggle()
@@ -226,9 +227,11 @@ class PomidorViewController: UIViewController {
 
         if isWorkTime {
             color = UIColor.red
+            cgColor = UIColor.red.cgColor
             timerLabel.text = timerLabelTextForWork
         } else {
             color = UIColor.green
+            cgColor = UIColor.green.cgColor
             timerLabel.text = timerLabelTextForRest
 
         }
@@ -236,7 +239,7 @@ class PomidorViewController: UIViewController {
         //changing objects color
         startPauseButton.configuration?.baseForegroundColor = color
         timerLabel.textColor = color
-
+        circularProgressBar.changeCircularPathColor(to: cgColor)
     }
 }
 
