@@ -18,6 +18,16 @@ class PomidorViewController: UIViewController {
         return view
     }()
 
+    private lazy var timerStackView: UIStackView = {
+        let stackView = UIStackView()
+
+        stackView.axis = .vertical
+        stackView.spacing = Metric.timerStackViewSpacing
+        stackView.alignment = .center
+
+        return stackView
+    }()
+
 
     // MARK: - Lifecycle
 
@@ -35,6 +45,8 @@ class PomidorViewController: UIViewController {
     private func setupHierarchy() {
         view.addSubview(parentView)
 
+        parentView.addSubview(timerStackView)
+
     }
 
     private func setupLayout() {
@@ -43,6 +55,11 @@ class PomidorViewController: UIViewController {
         parentView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
         parentView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier:  2 / 3).isActive = true
         parentView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2 / 3).isActive = true
+
+        timerStackView.translatesAutoresizingMaskIntoConstraints = false
+        timerStackView.centerXAnchor.constraint(equalTo: parentView.centerXAnchor).isActive = true
+        timerStackView.centerYAnchor.constraint(equalTo: parentView.centerYAnchor).isActive = true
+        timerStackView.heightAnchor.constraint(equalTo: parentView.widthAnchor, multiplier: 2 / 3).isActive = true
 
     }
 
