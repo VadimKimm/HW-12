@@ -9,7 +9,28 @@ import UIKit
 
 class PomidorViewController: UIViewController {
 
+    //defining the timer mode
+    private var isWorkTime = true
+
     private var isStarted = false
+
+    private var timer = Timer()
+
+    private let workTime = 1
+    private let restTime = 2
+
+    //uses for timer countdown
+    private lazy var workTimeInSeconds: Double = {
+        Double(workTime.toSeconds())
+    }()
+
+    //uses for timer countdown
+    private lazy var restTimeInSeconds: Double = {
+        Double(restTime.toSeconds())
+    }()
+
+    //uses for timer countdown
+    private var counter = 0.0
 
     private lazy var timerLabel: UILabel = {
         var label = UILabel()

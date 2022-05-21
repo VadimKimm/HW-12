@@ -14,5 +14,10 @@ extension PomidorViewController {
         
         static let timerLabelTextFont: CGFloat = 45
     }
+}
 
+extension Int {
+    func toSeconds() -> Int {
+        self * 60
+    }
 }
