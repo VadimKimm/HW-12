@@ -11,6 +11,8 @@ import UIKit
 extension PomidorViewController {
     enum Metric {
         static let timerStackViewSpacing: CGFloat = 10
+        
+        static let timerLabelTextFont: CGFloat = 45
     }
 
 }

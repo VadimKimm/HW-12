@@ -8,7 +8,36 @@
 import UIKit
 
 class PomidorViewController: UIViewController {
-    
+
+    private var isStarted = false
+
+    private lazy var timerLabel: UILabel = {
+        var label = UILabel()
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "timer"
+        label.font = .systemFont(ofSize: Metric.timerLabelTextFont, weight: .thin)
+        label.textColor = .red
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
+
+        return label
+    }()
+
+    private lazy var startPauseButton: UIButton = {
+        let button = UIButton()
+        var buttonConfig = UIButton.Configuration.plain()
+        let imageConfig = getButtonImageConfig()
+        let image = UIImage(systemName: "play", withConfiguration: imageConfig)
+
+        buttonConfig.baseForegroundColor = .red
+        buttonConfig.image = image
+
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.configuration = buttonConfig
+
+        return button
+    }()
 
     // MARK: - Views
 
@@ -18,6 +47,7 @@ class PomidorViewController: UIViewController {
         return view
     }()
 
+    //incudes timerLabel and startPauseButton
     private lazy var timerStackView: UIStackView = {
         let stackView = UIStackView()
 
@@ -38,6 +68,7 @@ class PomidorViewController: UIViewController {
         setupLayout()
         setupView()
 
+        startPauseButton.addTarget(self, action: #selector(startPauseButtonAction), for: .touchUpInside)
     }
 
     // MARK: - Settings
@@ -46,6 +77,9 @@ class PomidorViewController: UIViewController {
         view.addSubview(parentView)
 
         parentView.addSubview(timerStackView)
+
+        timerStackView.addArrangedSubview(timerLabel)
+        timerStackView.addArrangedSubview(startPauseButton)
 
     }
 
@@ -65,7 +99,38 @@ class PomidorViewController: UIViewController {
 
     private func setupView() {
         parentView.backgroundColor = .black
+        timerStackView.backgroundColor = .blue
+    }
+
+    // MARK: - @objc functions
+
+    @objc func startPauseButtonAction(sender: UIButton) {
+        changeButtonImage()
+        
+        isStarted.toggle()
 
     }
+
+    // MARK: - Private functions
+
+    private func getButtonImageConfig() -> UIImage.SymbolConfiguration {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 40, weight: .thin, scale: .default)
+
+        return imageConfig
+    }
+
+    //changing button image to play/pause
+    private func changeButtonImage() {
+        let imageConfig = getButtonImageConfig()
+
+        if isStarted {
+            let image = UIImage(systemName: "play", withConfiguration: imageConfig)
+            startPauseButton.setImage(image, for: .normal)
+        } else {
+            let image = UIImage(systemName: "pause", withConfiguration: imageConfig)
+            startPauseButton.setImage(image, for: .normal)
+        }
+    }
 }
+
 
