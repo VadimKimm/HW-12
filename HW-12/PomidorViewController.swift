@@ -14,22 +14,22 @@ class PomidorViewController: UIViewController {
 
     private var isStarted = false
 
+    //uses for pause and resume animation of circle
+    private var isAnimationStarted = false
+
     private var timer = Timer()
 
-    private let workTime = 1
-    private let restTime = 2
+    private let workTime = 25
+    private let restTime = 5
 
-    //uses for timer countdown
     private lazy var workTimeInSeconds: Double = {
         Double(workTime.toSeconds())
     }()
 
-    //uses for timer countdown
     private lazy var restTimeInSeconds: Double = {
         Double(restTime.toSeconds())
     }()
 
-    //uses for timer countdown
     private var counter = 0.0
 
     private lazy var circularProgressBar: CircularProgressBarView = {
@@ -141,7 +141,7 @@ class PomidorViewController: UIViewController {
     }
 
     private func setupView() {
-        
+
     }
 
     // MARK: - @objc functions
@@ -149,18 +149,26 @@ class PomidorViewController: UIViewController {
     @objc func startPauseButtonAction(sender: UIButton) {
         changeButtonImage()
 
-        circularProgressBar.startAnimation(duration: workTimeInSeconds)
-
         if isStarted {
             timer.invalidate()
         } else {
             timer.invalidate()
 
-            timer = Timer.scheduledTimer(timeInterval: 1,
+            /*timeInterval was setted to 0.01 for more accuracy and due to the fact that when timeInterval = 1 and
+             startPauseButton is pressed many times per second, the circle animation and timer can't be synchronized
+            */
+            timer = Timer.scheduledTimer(timeInterval: 0.01,
                                          target: self,
                                          selector: #selector(PomidorViewController.startTimer),
                                          userInfo: nil,
                                          repeats: true)
+        }
+
+        if isAnimationStarted {
+            circularProgressBar.toggleAnimationState()
+        } else {
+            circularProgressBar.startAnimation(duration: isWorkTime ? workTimeInSeconds : restTimeInSeconds)
+            isAnimationStarted.toggle()
         }
 
         isStarted.toggle()
@@ -200,7 +208,7 @@ class PomidorViewController: UIViewController {
     //uses for timer's countdown
     private func makeCountDown(of time: Double) {
 
-        counter += 1
+        counter += 0.01
 
         let minutes = Int(time - counter) / 60
         let seconds = Int(time - counter) % 60
@@ -221,6 +229,7 @@ class PomidorViewController: UIViewController {
 
         isStarted.toggle()
         isWorkTime.toggle()
+        isAnimationStarted.toggle()
 
         //setting up counter for the next uses
         counter = 0
