@@ -13,6 +13,7 @@
 		DD8E034D2839581F001E77C6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD8E034B2839581F001E77C6 /* Main.storyboard */; };
 		DD8E034F28395821001E77C6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD8E034E28395821001E77C6 /* Assets.xcassets */; };
 		DD8E035228395821001E77C6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD8E035028395821001E77C6 /* LaunchScreen.storyboard */; };
+		DD8E035A28395F0A001E77C6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD8E035928395F0A001E77C6 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		DD8E034E28395821001E77C6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DD8E035128395821001E77C6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DD8E035328395821001E77C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DD8E035928395F0A001E77C6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				DD8E03452839581F001E77C6 /* AppDelegate.swift */,
 				DD8E03472839581F001E77C6 /* SceneDelegate.swift */,
 				DD8E03492839581F001E77C6 /* PomidorViewController.swift */,
+				DD8E035928395F0A001E77C6 /* Extensions.swift */,
 				DD8E034B2839581F001E77C6 /* Main.storyboard */,
 				DD8E034E28395821001E77C6 /* Assets.xcassets */,
 				DD8E035028395821001E77C6 /* LaunchScreen.storyboard */,
@@ -141,6 +144,7 @@
 				DD8E034A2839581F001E77C6 /* PomidorViewController.swift in Sources */,
 				DD8E03462839581F001E77C6 /* AppDelegate.swift in Sources */,
 				DD8E03482839581F001E77C6 /* SceneDelegate.swift in Sources */,
+				DD8E035A28395F0A001E77C6 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
