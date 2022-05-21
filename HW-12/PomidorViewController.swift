@@ -32,6 +32,12 @@ class PomidorViewController: UIViewController {
     //uses for timer countdown
     private var counter = 0.0
 
+    private lazy var circularProgressBar: CircularProgressBarView = {
+        let circularProgressBar = CircularProgressBarView(frame: .zero)
+
+        return circularProgressBar
+    }()
+
     private lazy var timerLabelTextForWork: String = {
         String("\(workTime < 10 ? "0\(workTime):00" : "\(workTime):00")")
     }()
@@ -100,11 +106,19 @@ class PomidorViewController: UIViewController {
         startPauseButton.addTarget(self, action: #selector(startPauseButtonAction), for: .touchUpInside)
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        circularProgressBar.center = CGPoint(x: parentView.frame.size.width / 2, y: parentView.frame.size.height / 2)
+
+    }
+
     // MARK: - Settings
 
     private func setupHierarchy() {
         view.addSubview(parentView)
 
+        parentView.addSubview(circularProgressBar)
         parentView.addSubview(timerStackView)
 
         timerStackView.addArrangedSubview(timerLabel)
@@ -134,6 +148,8 @@ class PomidorViewController: UIViewController {
 
     @objc func startPauseButtonAction(sender: UIButton) {
         changeButtonImage()
+
+        circularProgressBar.startAnimation(duration: workTimeInSeconds)
 
         if isStarted {
             timer.invalidate()
