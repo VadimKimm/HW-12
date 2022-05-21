@@ -60,5 +60,10 @@ class CircularProgressBarView: UIView {
         }
 
 
+    func changeCircularPathColor(to color: CGColor) {
+        progressLayer.strokeColor = color
+        circleLayer.strokeColor = color
+    }
+
 }
 
