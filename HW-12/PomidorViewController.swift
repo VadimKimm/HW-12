@@ -132,6 +132,15 @@ class PomidorViewController: UIViewController {
 
     }
 
+    @objc func startTimer() {
+
+        if isWorkTime {
+            makeCountDown(of: workTimeInSeconds)
+        } else {
+            makeCountDown(of: restTimeInSeconds)
+        }
+    }
+
     // MARK: - Private functions
 
     private func getButtonImageConfig() -> UIImage.SymbolConfiguration {
