@@ -152,6 +152,22 @@ class PomidorViewController: UIViewController {
             startPauseButton.setImage(image, for: .normal)
         }
     }
+
+    //uses for timer's countdown
+    private func makeCountDown(of time: Double) {
+
+        counter += 1
+
+        let minutes = Int(time - counter) / 60
+        let seconds = Int(time - counter) % 60
+
+        timerLabel.text = String("\(minutes < 10 ? "0\(minutes)" : "\(minutes)"):\(seconds < 10 ? "0\(seconds)" : "\(seconds)")")
+
+        if counter >= time  {
+            timer.invalidate()
+            changeButtonImage()
+        }
+    }
 }
 
 
