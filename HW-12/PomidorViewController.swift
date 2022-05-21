@@ -32,11 +32,19 @@ class PomidorViewController: UIViewController {
     //uses for timer countdown
     private var counter = 0.0
 
+    private lazy var timerLabelTextForWork: String = {
+        String("\(workTime < 10 ? "0\(workTime):00" : "\(workTime):00")")
+    }()
+
+    private lazy var timerLabelTextForRest: String = {
+        String("\(restTime < 10 ? "0\(restTime):00" : "\(restTime):00")")
+    }()
+
     private lazy var timerLabel: UILabel = {
         var label = UILabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "timer"
+        label.text = timerLabelTextForWork
         label.font = .systemFont(ofSize: Metric.timerLabelTextFont, weight: .thin)
         label.textColor = .red
         label.adjustsFontSizeToFitWidth = true
@@ -119,8 +127,7 @@ class PomidorViewController: UIViewController {
     }
 
     private func setupView() {
-        parentView.backgroundColor = .black
-        timerStackView.backgroundColor = .blue
+        
     }
 
     // MARK: - @objc functions
@@ -187,7 +194,33 @@ class PomidorViewController: UIViewController {
         if counter >= time  {
             timer.invalidate()
             changeButtonImage()
+            changeTimerMode()
         }
+    }
+
+    //trigerres when the timer ends
+    private func changeTimerMode() {
+        var color = UIColor()
+
+        isStarted.toggle()
+        isWorkTime.toggle()
+
+        //setting up counter for the next uses
+        counter = 0
+
+        if isWorkTime {
+            color = UIColor.red
+            timerLabel.text = timerLabelTextForWork
+        } else {
+            color = UIColor.green
+            timerLabel.text = timerLabelTextForRest
+
+        }
+
+        //changing objects color
+        startPauseButton.configuration?.baseForegroundColor = color
+        timerLabel.textColor = color
+
     }
 }
 
