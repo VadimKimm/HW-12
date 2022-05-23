@@ -130,14 +130,13 @@ class PomidorViewController: UIViewController {
         parentView.translatesAutoresizingMaskIntoConstraints = false
         parentView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
         parentView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        parentView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier:  2 / 3).isActive = true
-        parentView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2 / 3).isActive = true
+        parentView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier:  Metric.parentViewWidthMultiplier).isActive = true
+        parentView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: Metric.parentViewHeightMultiplier).isActive = true
 
         timerStackView.translatesAutoresizingMaskIntoConstraints = false
         timerStackView.centerXAnchor.constraint(equalTo: parentView.centerXAnchor).isActive = true
         timerStackView.centerYAnchor.constraint(equalTo: parentView.centerYAnchor).isActive = true
-        timerStackView.heightAnchor.constraint(equalTo: parentView.widthAnchor, multiplier: 2 / 3).isActive = true
-
+        timerStackView.heightAnchor.constraint(equalTo: parentView.widthAnchor, multiplier: Metric.timerStackViewHeightMultiplier).isActive = true
     }
 
     private func setupView() {
