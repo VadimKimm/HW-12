@@ -237,6 +237,15 @@ class PomidorViewController: UIViewController {
         timerLabel.textColor = color
         circularProgressBar.changeCircularPathColor(to: cgColor)
     }
+
+    private func changeAnimationState() {
+        if isAnimationStarted {
+            circularProgressBar.toggleAnimationState()
+        } else {
+            circularProgressBar.startAnimation(duration: isWorkTime ? workTimeInSeconds : restTimeInSeconds)
+            isAnimationStarted.toggle()
+        }
+    }
 }
 
 
