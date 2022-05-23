@@ -110,7 +110,6 @@ class PomidorViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         circularProgressBar.center = CGPoint(x: parentView.frame.size.width / 2, y: parentView.frame.size.height / 2)
-
     }
 
     // MARK: - Settings
@@ -123,7 +122,6 @@ class PomidorViewController: UIViewController {
 
         timerStackView.addArrangedSubview(timerLabel)
         timerStackView.addArrangedSubview(startPauseButton)
-
     }
 
     private func setupLayout() {
@@ -194,14 +192,9 @@ class PomidorViewController: UIViewController {
     //changing button image to play/pause
     private func changeButtonImage() {
         let imageConfig = getButtonImageConfig()
+        let image = UIImage(systemName: (isStarted == true ? "play" : "pause"), withConfiguration: imageConfig)
 
-        if isStarted {
-            let image = UIImage(systemName: "play", withConfiguration: imageConfig)
-            startPauseButton.setImage(image, for: .normal)
-        } else {
-            let image = UIImage(systemName: "pause", withConfiguration: imageConfig)
-            startPauseButton.setImage(image, for: .normal)
-        }
+        startPauseButton.setImage(image, for: .normal)
     }
 
     //uses for timer's countdown
