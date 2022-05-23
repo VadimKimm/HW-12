@@ -19,8 +19,8 @@ class PomidorViewController: UIViewController {
 
     private var timer = Timer()
 
-    private let workTime = 25
-    private let restTime = 5
+    private let workTime = 2
+    private let restTime = 1
 
     private lazy var workTimeInSeconds: Double = {
         Double(workTime.toSeconds())
@@ -190,8 +190,9 @@ class PomidorViewController: UIViewController {
 
         counter += 0.01
 
-        let minutes = Int(time - counter) / 60
-        let seconds = Int(time - counter) % 60
+        let differenceTime = Int((time - counter).rounded(.up))
+        let minutes = differenceTime / 60
+        let seconds = differenceTime % 60
 
         timerLabel.text = String("\(minutes < 10 ? "0\(minutes)" : "\(minutes)"):\(seconds < 10 ? "0\(seconds)" : "\(seconds)")")
 
@@ -222,7 +223,6 @@ class PomidorViewController: UIViewController {
             color = UIColor.green
             cgColor = UIColor.green.cgColor
             timerLabel.text = timerLabelTextForRest
-
         }
 
         //changing objects color
