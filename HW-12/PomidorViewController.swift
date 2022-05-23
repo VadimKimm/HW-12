@@ -145,31 +145,24 @@ class PomidorViewController: UIViewController {
 
     @objc func startPauseButtonAction(sender: UIButton) {
         changeButtonImage()
+        changeAnimationState()
+        timer.invalidate()
 
-        if isStarted {
-            timer.invalidate()
-        } else {
-            timer.invalidate()
-
-            /*timeInterval was setted to 0.01 for more accuracy and due to the fact that when timeInterval = 1 and
-             startPauseButton is pressed many times per second, the circle animation and timer can't be synchronized
-            */
-            timer = Timer.scheduledTimer(timeInterval: 0.01,
-                                         target: self,
-                                         selector: #selector(PomidorViewController.startTimer),
-                                         userInfo: nil,
-                                         repeats: true)
+        guard !isStarted else {
+            isStarted.toggle()
+            return
         }
 
-        if isAnimationStarted {
-            circularProgressBar.toggleAnimationState()
-        } else {
-            circularProgressBar.startAnimation(duration: isWorkTime ? workTimeInSeconds : restTimeInSeconds)
-            isAnimationStarted.toggle()
-        }
+        /*timeInterval was setted to 0.01 for more accuracy and due to the fact that when timeInterval = 1 and
+         startPauseButton is pressed many times per second, the circle animation and timer can't be synchronized
+        */
+        timer = Timer.scheduledTimer(timeInterval: 0.01,
+                                     target: self,
+                                     selector: #selector(PomidorViewController.startTimer),
+                                     userInfo: nil,
+                                     repeats: true)
 
         isStarted.toggle()
-
     }
 
     @objc func startTimer() {
