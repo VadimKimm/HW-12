@@ -173,12 +173,7 @@ class PomidorViewController: UIViewController {
     }
 
     @objc func startTimer() {
-
-        if isWorkTime {
-            makeCountDown(of: workTimeInSeconds)
-        } else {
-            makeCountDown(of: restTimeInSeconds)
-        }
+        isWorkTime == true ? makeCountDown(of: workTimeInSeconds) : makeCountDown(of: restTimeInSeconds)
     }
 
     // MARK: - Private functions
