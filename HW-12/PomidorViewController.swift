@@ -19,8 +19,8 @@ class PomidorViewController: UIViewController {
 
     private var timer = Timer()
 
-    private let workTime = 25
-    private let restTime = 5
+    private let workTime = 2
+    private let restTime = 1
 
     private lazy var workTimeInSeconds: Double = {
         Double(workTime.toSeconds())
@@ -110,7 +110,6 @@ class PomidorViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         circularProgressBar.center = CGPoint(x: parentView.frame.size.width / 2, y: parentView.frame.size.height / 2)
-
     }
 
     // MARK: - Settings
@@ -123,21 +122,19 @@ class PomidorViewController: UIViewController {
 
         timerStackView.addArrangedSubview(timerLabel)
         timerStackView.addArrangedSubview(startPauseButton)
-
     }
 
     private func setupLayout() {
         parentView.translatesAutoresizingMaskIntoConstraints = false
         parentView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
         parentView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
-        parentView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier:  2 / 3).isActive = true
-        parentView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: 2 / 3).isActive = true
+        parentView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier:  Metric.parentViewWidthMultiplier).isActive = true
+        parentView.heightAnchor.constraint(equalTo: view.widthAnchor, multiplier: Metric.parentViewHeightMultiplier).isActive = true
 
         timerStackView.translatesAutoresizingMaskIntoConstraints = false
         timerStackView.centerXAnchor.constraint(equalTo: parentView.centerXAnchor).isActive = true
         timerStackView.centerYAnchor.constraint(equalTo: parentView.centerYAnchor).isActive = true
-        timerStackView.heightAnchor.constraint(equalTo: parentView.widthAnchor, multiplier: 2 / 3).isActive = true
-
+        timerStackView.heightAnchor.constraint(equalTo: parentView.widthAnchor, multiplier: Metric.timerStackViewHeightMultiplier).isActive = true
     }
 
     private func setupView() {
@@ -148,40 +145,28 @@ class PomidorViewController: UIViewController {
 
     @objc func startPauseButtonAction(sender: UIButton) {
         changeButtonImage()
+        changeAnimationState()
+        timer.invalidate()
 
-        if isStarted {
-            timer.invalidate()
-        } else {
-            timer.invalidate()
-
-            /*timeInterval was setted to 0.01 for more accuracy and due to the fact that when timeInterval = 1 and
-             startPauseButton is pressed many times per second, the circle animation and timer can't be synchronized
-            */
-            timer = Timer.scheduledTimer(timeInterval: 0.01,
-                                         target: self,
-                                         selector: #selector(PomidorViewController.startTimer),
-                                         userInfo: nil,
-                                         repeats: true)
+        guard !isStarted else {
+            isStarted.toggle()
+            return
         }
 
-        if isAnimationStarted {
-            circularProgressBar.toggleAnimationState()
-        } else {
-            circularProgressBar.startAnimation(duration: isWorkTime ? workTimeInSeconds : restTimeInSeconds)
-            isAnimationStarted.toggle()
-        }
+        /*timeInterval was setted to 0.01 for more accuracy and due to the fact that when timeInterval = 1 and
+         startPauseButton is pressed many times per second, the circle animation and timer can't be synchronized
+        */
+        timer = Timer.scheduledTimer(timeInterval: 0.01,
+                                     target: self,
+                                     selector: #selector(PomidorViewController.startTimer),
+                                     userInfo: nil,
+                                     repeats: true)
 
         isStarted.toggle()
-
     }
 
     @objc func startTimer() {
-
-        if isWorkTime {
-            makeCountDown(of: workTimeInSeconds)
-        } else {
-            makeCountDown(of: restTimeInSeconds)
-        }
+        isWorkTime == true ? makeCountDown(of: workTimeInSeconds) : makeCountDown(of: restTimeInSeconds)
     }
 
     // MARK: - Private functions
@@ -195,14 +180,9 @@ class PomidorViewController: UIViewController {
     //changing button image to play/pause
     private func changeButtonImage() {
         let imageConfig = getButtonImageConfig()
+        let image = UIImage(systemName: (isStarted == true ? "play" : "pause"), withConfiguration: imageConfig)
 
-        if isStarted {
-            let image = UIImage(systemName: "play", withConfiguration: imageConfig)
-            startPauseButton.setImage(image, for: .normal)
-        } else {
-            let image = UIImage(systemName: "pause", withConfiguration: imageConfig)
-            startPauseButton.setImage(image, for: .normal)
-        }
+        startPauseButton.setImage(image, for: .normal)
     }
 
     //uses for timer's countdown
@@ -210,8 +190,9 @@ class PomidorViewController: UIViewController {
 
         counter += 0.01
 
-        let minutes = Int(time - counter) / 60
-        let seconds = Int(time - counter) % 60
+        let differenceTime = Int((time - counter).rounded(.up))
+        let minutes = differenceTime / 60
+        let seconds = differenceTime % 60
 
         timerLabel.text = String("\(minutes < 10 ? "0\(minutes)" : "\(minutes)"):\(seconds < 10 ? "0\(seconds)" : "\(seconds)")")
 
@@ -242,13 +223,21 @@ class PomidorViewController: UIViewController {
             color = UIColor.green
             cgColor = UIColor.green.cgColor
             timerLabel.text = timerLabelTextForRest
-
         }
 
         //changing objects color
         startPauseButton.configuration?.baseForegroundColor = color
         timerLabel.textColor = color
         circularProgressBar.changeCircularPathColor(to: cgColor)
+    }
+
+    private func changeAnimationState() {
+        if isAnimationStarted {
+            circularProgressBar.toggleAnimationState()
+        } else {
+            circularProgressBar.startAnimation(duration: isWorkTime ? workTimeInSeconds : restTimeInSeconds)
+            isAnimationStarted.toggle()
+        }
     }
 }
 
